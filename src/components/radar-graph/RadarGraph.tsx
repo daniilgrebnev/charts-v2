@@ -22,7 +22,7 @@ export function RadarGraph() {
 	const data = store.items.map(item => ({
 		value: item.data[0][item.data[0].length - 1],
 	}))
-
+	if (!data) return
 	const setActive = (index: number) => {
 		const item = store.items[index]
 		dispatch(setActiveId(item.id))
@@ -33,16 +33,24 @@ export function RadarGraph() {
 	const outerRadius = 0.8
 
 	useEffect(() => {
+		const element = containerRef.current
+		if (!element) return
+
 		const resize = () => {
-			if (containerRef.current) {
-				const { offsetWidth, offsetHeight } = containerRef.current
-				const size = Math.min(offsetWidth, offsetHeight)
-				setRadius(size * outerRadius * 0.5)
-			}
+			const { offsetWidth, offsetHeight } = element
+			const size = Math.min(offsetWidth, offsetHeight)
+			setRadius(size * outerRadius * 0.5)
 		}
+
+		// Инициализировать сразу
 		resize()
-		window.addEventListener('resize', resize)
-		return () => window.removeEventListener('resize', resize)
+
+		const observer = new ResizeObserver(resize)
+		observer.observe(element)
+
+		return () => {
+			observer.disconnect()
+		}
 	}, [])
 
 	return (

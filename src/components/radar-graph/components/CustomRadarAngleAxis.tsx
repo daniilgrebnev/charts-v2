@@ -7,11 +7,13 @@ export const CustomRadarAngleAxis = ({
 	index,
 	onChangeElement,
 }: any) => {
+	// TODO: Радиус должен быть точно таким же, как `outerRadius` в RadarChart
+
 	const angle = payload.coordinate
 	const radians = (Math.PI / 180) * angle
 
 	// Вычисляем позицию по кругу
-	const radiusWithOffset = radius - 4 // 4 методом подбора
+	const radiusWithOffset = radius - 4 // методом подбора
 	const x = cx + radiusWithOffset * Math.cos(-radians)
 	const y = cy + radiusWithOffset * Math.sin(-radians)
 
